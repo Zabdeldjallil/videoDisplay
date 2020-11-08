@@ -1,5 +1,5 @@
 import express from 'express';
-import {extname,resolve} from "path"
+import {extname,resolve,join} from "path"
 import {createReadStream,stat,statSync} from 'fs'
 import {promisify} from "util"
 import ejs from 'ejs';
@@ -7,13 +7,20 @@ import bodyParser from 'body-parser'
 const app=new express();
 app.use(express.static("public"))
 app.set("view engine",'ejs')
-
-app.get("/video",function(req,res){
+app.get("/accueil",function(req,res){
+  res.render("accueil")
+})
+app.get('/toto/:vid', function(req, res) {  
+  res.render("index",{vid:req.params.vid})
+  })
+app.get("/video/:vid",function(req,res){
   //console.log(req.headers)
-    const path="public/toto.mp4";
+   
+    const path=`public/${req.params.vid}`;
     const stat=statSync(path);
     const fileSize=stat.size;
-    const range=req.headers.range;  
+    const range=req.headers.range;
+    
     if(range){
         //console.log(req.headers.range)
         const parts=range.replace(/bytes=/,"").split("-");
@@ -31,8 +38,10 @@ app.get("/video",function(req,res){
         'Content-Length': chunksize,
         'Content-Type': 'video/mp4'
     }
+    
     res.writeHead(206,head);
     file.pipe(res);
+    
     }
     else{
         //console.log(req.headers)
@@ -42,6 +51,7 @@ app.get("/video",function(req,res){
           }
           res.writeHead(200,head)
           createReadStream(path).pipe(res)
+         // res.render("index",{video:path})
     }
 })
 

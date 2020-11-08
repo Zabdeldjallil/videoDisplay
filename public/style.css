@@ -1,0 +1,79 @@
+body{
+    margin: 0;
+}
+.parent{
+    display: grid;
+    grid-template: auto 1fr auto/1fr 4fr 1fr;
+    height: 100vh;
+}
+.header{
+    background-color: rgb(42, 44, 46);
+    padding: 2rem;
+    grid-column: 1/4;
+    display: flex;
+    justify-content: space-between;
+    height: auto;
+}
+.right{
+    background-color: darkcyan;
+    grid-column: 3/4;
+}
+.left{
+    background-color: darkcyan;
+    grid-column: 1/2;
+    display: inline-block;
+    word-wrap: break-word;
+}
+.main{
+    background-color:rgb(42, 44, 50) ;
+    grid-column: 2/3;
+    border-radius: 10px;
+    display: flex;
+    margin-top: 15px;
+    height: auto;
+}
+.main img{
+    height: 30vh;
+    width: 30vh;
+}
+.main .vid{
+display: flex;
+flex-direction: column;
+margin: 5px 5px;
+background-color: slategray;
+height: 35vh;
+border-radius: 10px;
+}
+.vid a {
+    text-decoration: none;
+    color: black;
+}
+.vid a:hover{
+    opacity: 0.8;
+}
+.title{
+    padding: 5px 5px;
+    text-align: center;
+}
+.footer{
+    /*background-color: lawngreen;*/
+    grid-column: 1/4;
+    padding: 2rem;
+}
+.links ul{
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+}
+.links ul li a {
+    text-decoration: none;
+    padding: 0 5px;
+    color: white;
+}
+.gauche{
+    color: white;
+    padding: 0 5px;
+}
+body{
+    background-color: lightslategrey;
+}
