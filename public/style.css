@@ -77,3 +77,21 @@ border-radius: 10px;
 body{
     background-color: lightslategrey;
 }
+.main form{
+    display: flex;
+    flex-direction: column;
+    background-color: grey;
+    height: 20vh;
+    width: 45vh;
+    margin-top: 10px;
+    border-radius: 10px;
+}
+.main form button,input{
+    margin-top: 20px;
+}
+.formu{
+    
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+}
