@@ -33,9 +33,6 @@ const Video = sequelize.define('Video', {
     await Video.sync({});
     console.log("The table for the User model was just (re)created!");
   })()*/
-
-
-//var upload = multer({ dest: 'public/uploads' })
 const app=new express();
 app.use(express.static("public"))
 app.set("view engine",'ejs')
@@ -43,27 +40,18 @@ app.set("view engine",'ejs')
 app.get("/uploading",function(req,res){
   res.render("uploading")
 })
-app.post('/uploading', function (req, res, next) {
-  // req.file is the `avatar` file
-  // req.body will hold the text fields, if there were any
-  upload2(req,res,(err) =>{
-    if(err)res.send("err");
-    else{
-      if(req.file==undefined)res.send("Undefined")
-      else res.redirect("/uploading")
-    }
-  })
+app.get("/accueil",async function(req,res){
+  const videos = await Video.findAll();
+  //console.log(videos)
+  res.render("accueil",{videos:videos})
 })
-app.get("/accueil",function(req,res){
-  res.render("accueil")
-})
-app.get('/toto/:vid', function(req, res) {  
+app.get('/toto/uploads/:vid', function(req, res) {  
   res.render("index",{vid:req.params.vid})
   })
 app.get("/video/:vid",function(req,res){
   //console.log(req.headers)
    
-    const path=`public/${req.params.vid}`;
+    const path=`public/uploads/${req.params.vid}`;
     const stat=statSync(path);
     const fileSize=stat.size;
     const range=req.headers.range;
@@ -103,7 +91,7 @@ app.get("/video/:vid",function(req,res){
 })
 
 const storage2 = multer.diskStorage({
-  destination: './public',
+  destination: './public/uploads',
   filename: function(req, file, cb){
     cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   }
@@ -115,10 +103,20 @@ const upload2 = multer({
   fileFilter: function(req, file, cb){
     checkFileType(file, cb);
   }
-}).single('video');
+})
+var cpUpload = upload2.fields([{ name: 'photo', maxCount: 1 }, { name: 'video', maxCount: 1}])
+app.post("/uploading",cpUpload,async function(req,res,next){
+ /* console.log(req.body)
+  console.log(req.files['photo'][0])
+  console.log(req.files['video'][0])*/
+  const video = await Video.create({ title: req.body.title, pathVid: `${req.files['video'][0].path.substring(7,req.files['video'][0].path.length)}`,pathImg:`${req.files['photo'][0].path.substring(7,req.files['photo'][0].length)}` });
+  res.redirect("/uploading")
+})
 // Check File Type
 function checkFileType(file, cb){
-  // Allowed ext
+  console.log(file)
+  if(file.fieldname=='video'){
+     // Allowed ext
   const filetypes = /mp4|mov/;
   // Check ext
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
@@ -130,6 +128,35 @@ function checkFileType(file, cb){
   } else {
     cb('Error: Videos Only!');
   }
+  }
+  else{
+    if(file.fieldname=="photo"){
+       // Allowed ext
+  const filetypes = /jpg|jpeg|png/;
+  // Check ext
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  // Check mime
+  const mimetype = filetypes.test(file.mimetype);
+
+  if(mimetype && extname){
+    return cb(null,true);
+  } else {
+    cb('Error: Photos Only!');
+  }
+    }
+  }
+ /* // Allowed ext
+  const filetypes = /mp4|mov/;
+  // Check ext
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  // Check mime
+  const mimetype = filetypes.test(file.mimetype);
+
+  if(mimetype && extname){
+    return cb(null,true);
+  } else {
+    cb('Error: Videos Only!');
+  }*/
 }
 
 app.listen(8080,function(){console.log("started listening on port 8080")})

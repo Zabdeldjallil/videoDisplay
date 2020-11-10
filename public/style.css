@@ -81,7 +81,7 @@ body{
     display: flex;
     flex-direction: column;
     background-color: grey;
-    height: 20vh;
+    height: 50vh;
     width: 45vh;
     margin-top: 10px;
     border-radius: 10px;

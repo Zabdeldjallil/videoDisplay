@@ -19,15 +19,15 @@
 </div>
     </div>
     <div class="main">
-        <div class="vid">
-            <img src="toto.jpg" alt="">
-        <div class="title"><a href="/toto/toto.mp4">Lien vers la vidéo</a></div>
-        </div>
-        <div class="vid">
-            <img src="toto.jpg" alt="">
-            <div class="title"><a href="/toto/moti.mp4">Lien vers la vidéo</a></div>
-        </div>
-      
+         
+        <% if (locals.videos) { %>
+         <% for( let index = 0; index < videos.length; index++ ) { %>
+            <div class="vid">
+            <img src=<%= videos[index].pathImg %> alt="">
+            <div class="title"><a href="/toto/<%= videos[index].pathVid %>"><%= videos[index].title %></a></div>
+            </div>
+         <% } %>
+        <% } %>
     </div>
     <div class="footer">
         footer
